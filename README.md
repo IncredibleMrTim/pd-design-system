@@ -140,7 +140,7 @@ The fields of `JobCardData`, all optional except `title`:
 | `callouts` | Bordered boxes of text, one per entry. |
 | `badge` | `{ label, color }`: a colour block beside the pills. |
 | `pills` | `{ label, tone, icon?, priority? }[]`. Labels must be unique. |
-| `banner` | `{ label, icon? }`: a bar across the bottom, in a colour no pill uses. |
+| `banner` | `{ label, icon? }`: a pale blue notice bar across the bottom. |
 
 Behaviour to know about:
 

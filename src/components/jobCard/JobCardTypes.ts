@@ -70,7 +70,7 @@ export interface JobCardPill {
   priority?: boolean
 }
 
-/** A bar across the bottom of the card, in a colour no pill uses. */
+/** A pale blue notice bar across the bottom of the card. */
 export interface JobCardBanner {
   /** The words shown. */
   label: string

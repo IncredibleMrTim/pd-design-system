@@ -244,17 +244,18 @@ export const AllPillTones: Story = {
   },
 }
 
-/** A bar across the bottom, in a colour no pill uses. */
+/** A pale blue notice bar across the bottom, with a border that holds up on any card tone. */
 export const WithBanner: Story = {
   args: {
     job: {
       ...baseJob,
-      banner: { label: "3 new parts", icon: <PackagePlus aria-hidden="true" /> },
+      banner: { label: "3 items need setting up", icon: <PackagePlus aria-hidden="true" /> },
     },
   },
   play: async ({ canvasElement }) => {
-    const banner = within(canvasElement).getByText("3 new parts")
-    await expect(banner).toHaveClass("bg-fuchsia-600")
+    const banner = within(canvasElement).getByText("3 items need setting up")
+    await expect(banner).toHaveClass("bg-blue-50", "border-blue-300", "text-gray-600")
+    await expect(banner).not.toHaveClass("font-bold")
     await expect(banner.querySelector("svg")).not.toBeNull()
   },
 }
@@ -320,7 +321,7 @@ export const Everything: Story = {
         { label: "Internal", tone: "blue" },
         { label: "Locked", tone: "outline", icon: <Lock aria-hidden="true" /> },
       ],
-      banner: { label: "2 new parts", icon: <PackagePlus aria-hidden="true" /> },
+      banner: { label: "2 items need setting up", icon: <PackagePlus aria-hidden="true" /> },
     },
     action: { label: "↻ Send back for another run", onClick: fn() },
   },
@@ -328,7 +329,7 @@ export const Everything: Story = {
     const canvas = within(canvasElement)
     await expect(canvas.getByText("PO-1001")).toBeInTheDocument()
     await expect(canvas.getByText("Locked")).toBeInTheDocument()
-    await expect(canvas.getByText("2 new parts")).toBeInTheDocument()
+    await expect(canvas.getByText("2 items need setting up")).toBeInTheDocument()
     await expect(canvas.getByRole("button", { name: /send back/i })).toBeInTheDocument()
   },
 }
