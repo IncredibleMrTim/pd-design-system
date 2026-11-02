@@ -1,12 +1,31 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
-import { Flag, Lock, PackagePlus, Zap } from "lucide-react"
+import { Flag, GripVertical, Lock, PackagePlus, Zap } from "lucide-react"
 import { expect, fn, userEvent, within } from "storybook/test"
 import { JobCard } from "./JobCard"
-import type { JobCardData, JobCardPillTone } from "./JobCardTypes"
+import type { JobCardColor, JobCardData, JobCardPillTone } from "./JobCardTypes"
 
 const baseJob: JobCardData = {
   title: "PO-1001",
   subtitle: "Acme Co",
+}
+
+/** A job with every field filled in. Used by the Everything and Playground stories. */
+const fullJob: JobCardData = {
+  title: "PO-1001",
+  subtitle: "Acme Co",
+  tone: "warning",
+  stage: { label: "In progress", color: "#d97706" },
+  details: ["Created: 29 Oct 2026", "Created by: Sam Jones"],
+  description: "Brass connector, 40 off",
+  callouts: ["Line 2: 40% (loaded 29 Oct)"],
+  badge: { label: "Gold", color: "yellow" },
+  pills: [
+    { label: "Urgent", tone: "critical", icon: <Zap aria-hidden="true" />, priority: true },
+    { label: "Flagged", tone: "warning", icon: <Flag aria-hidden="true" />, priority: true },
+    { label: "Internal", tone: "blue" },
+    { label: "Locked", tone: "outline", icon: <Lock aria-hidden="true" /> },
+  ],
+  banner: { label: "2 items need setting up", icon: <PackagePlus aria-hidden="true" /> },
 }
 
 const meta = {
@@ -16,6 +35,36 @@ const meta = {
   args: {
     job: baseJob,
     onClick: fn(),
+  },
+  // The content args hold React nodes, which Controls can't edit directly, so
+  // each offers a few ready-made examples to pick from.
+  argTypes: {
+    job: { control: "object" },
+    action: { control: "object" },
+    leadingContent: {
+      control: "select",
+      options: ["none", "checkbox", "grip icon"],
+      mapping: {
+        none: undefined,
+        checkbox: <input type="checkbox" aria-label="Select job" />,
+        "grip icon": <GripVertical aria-hidden="true" className="h-4 w-4 text-gray-400" />,
+      },
+    },
+    expandedContent: {
+      control: "select",
+      options: ["none", "note", "list"],
+      mapping: {
+        none: undefined,
+        note: <p className="mt-3 text-xs text-gray-600">Waiting on a customer reply.</p>,
+        list: (
+          <ul className="mt-3 list-disc pl-5 text-xs text-gray-600">
+            <li>Check the drawing</li>
+            <li>Book the courier</li>
+          </ul>
+        ),
+      },
+    },
+    className: { control: "select", options: ["", "mb-0", "shadow-lg", "opacity-70"] },
   },
   decorators: [
     (Story) => (
@@ -149,6 +198,28 @@ export const WithBadge: Story = {
   args: { job: { ...baseJob, badge: { label: "Gold", color: "yellow" } } },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText("Gold")).toHaveClass("bg-yellow-300")
+  },
+}
+
+/** Every badge colour. */
+export const AllBadgeColors: Story = {
+  render: (args) => (
+    <div className="space-y-3">
+      {(["gray", "yellow", "red", "orange", "green", "blue", "purple"] satisfies JobCardColor[]).map(
+        (color) => (
+          <JobCard
+            key={color}
+            {...args}
+            job={{ ...baseJob, title: `Badge example ${color}`, badge: { label: color, color } }}
+          />
+        ),
+      )}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getByText("gray")).toHaveClass("bg-gray-300")
+    await expect(canvas.getByText("purple")).toHaveClass("bg-purple-300")
   },
 }
 
@@ -287,6 +358,14 @@ export const WithLeadingContent: Story = {
   },
 }
 
+/** Leading content can be any node, for example a drag handle icon. */
+export const WithLeadingIcon: Story = {
+  args: { leadingContent: <GripVertical aria-label="Drag to reorder" className="h-4 w-4 text-gray-400" /> },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByLabelText("Drag to reorder")).toBeInTheDocument()
+  },
+}
+
 /** Extra content at the very bottom. */
 export const WithExpandedContent: Story = {
   args: { expandedContent: <p className="mt-3 text-xs">Extra detail, shown when expanded.</p> },
@@ -306,23 +385,7 @@ export const CustomClassName: Story = {
 /** Every part at once. */
 export const Everything: Story = {
   args: {
-    job: {
-      title: "PO-1001",
-      subtitle: "Acme Co",
-      tone: "warning",
-      stage: { label: "In progress", color: "#d97706" },
-      details: ["Created: 29 Oct 2026", "Created by: Sam Jones"],
-      description: "Brass connector, 40 off",
-      callouts: ["Line 2: 40% (loaded 29 Oct)"],
-      badge: { label: "Gold", color: "yellow" },
-      pills: [
-        { label: "Urgent", tone: "critical", icon: <Zap aria-hidden="true" />, priority: true },
-        { label: "Flagged", tone: "warning", icon: <Flag aria-hidden="true" />, priority: true },
-        { label: "Internal", tone: "blue" },
-        { label: "Locked", tone: "outline", icon: <Lock aria-hidden="true" /> },
-      ],
-      banner: { label: "2 items need setting up", icon: <PackagePlus aria-hidden="true" /> },
-    },
+    job: fullJob,
     action: { label: "↻ Send back for another run", onClick: fn() },
   },
   play: async ({ canvasElement }) => {
@@ -331,5 +394,27 @@ export const Everything: Story = {
     await expect(canvas.getByText("Locked")).toBeInTheDocument()
     await expect(canvas.getByText("2 items need setting up")).toBeInTheDocument()
     await expect(canvas.getByRole("button", { name: /send back/i })).toBeInTheDocument()
+  },
+}
+
+/**
+ * Every arg filled in, so the Controls panel shows an example of each one.
+ * Change any of them to see the card respond: edit the `job` and `action`
+ * objects, pick a leading or expanded content example, or add a class name.
+ */
+export const Playground: Story = {
+  args: {
+    job: fullJob,
+    action: { label: "↻ Send back for another run", onClick: fn() },
+    leadingContent: "checkbox" as never,
+    expandedContent: "note" as never,
+    className: "shadow-lg",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // The select options above are mapped to real content.
+    await expect(canvas.getByRole("checkbox", { name: "Select job" })).toBeInTheDocument()
+    await expect(canvas.getByText("Waiting on a customer reply.")).toBeInTheDocument()
+    await expect(getCard(canvasElement)).toHaveClass("shadow-lg")
   },
 }
