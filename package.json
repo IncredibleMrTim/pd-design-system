@@ -2,7 +2,7 @@
   "name": "@processdynamics/components",
   "version": "0.1.0",
   "description": "Process Dynamics React component library, built on shadcn (Radix) and Tailwind CSS v4.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IncredibleMrTim/pd-design-system.git"
