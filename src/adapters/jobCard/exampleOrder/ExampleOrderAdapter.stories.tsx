@@ -47,7 +47,7 @@ const ExampleOrderCard = ({ order, view, onReopen }: ExampleOrderCardProps) => (
 )
 
 const meta = {
-  title: "Adapters/Example order",
+  title: "Adapters/Job card/Example order",
   component: ExampleOrderCard,
   tags: ["autodocs"],
   parameters: {
