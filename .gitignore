@@ -45,3 +45,6 @@ storybook-static
 
 # Claude Code
 .claude/scheduled_tasks.lock
+
+# library build
+/dist
