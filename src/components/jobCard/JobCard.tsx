@@ -68,6 +68,10 @@ export const JobCard = ({
     <Card
       onClick={onClick}
       className={cn(
+        // The shadcn Card adds vertical padding, a gap, bigger corners and a
+        // ring. The card's own padding is set on CardContent below, so those
+        // are cancelled here to keep the original, tighter layout.
+        "gap-0 py-0 rounded-lg ring-0 shadow-xs",
         "border-2 mb-2.5 active:scale-[0.98] transition-all hover:opacity-90",
         onClick && "cursor-pointer",
         CARD_TONE_CLASSES[job.tone ?? "neutral"],
