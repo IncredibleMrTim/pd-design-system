@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# pd-design-system
 
-## Getting Started
+A Next.js component library boilerplate using Tailwind CSS v4 and Storybook.
 
-First, run the development server:
+## Run it
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- `pnpm storybook` opens Storybook on port 6006.
+- `pnpm dev` runs the Next.js app.
+- `pnpm exec vitest run` runs every story as a test, including the interaction checks.
+- `pnpm build-storybook` builds the static Storybook.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/components/ui/` holds the shadcn parts (Radix based): button, calendar and popover. Add more with `pnpm dlx shadcn@latest add <name>`.
+- `src/components/<name>/` holds one component and its stories, for example `datePicker/`. Small repeated pieces go in a plural file.
+- `src/components/index.ts` is the public export list.
+- `src/lib/utils.ts` re-exports `cn` from the [cn](https://www.npmjs.com/package/cn) package, shadcn's class-merging helper. It replaces `clsx` and `tailwind-merge`, so the app only needs `cn`.
+- `.storybook/main.ts` registers the Tailwind Vite plugin, because Storybook runs on Vite while Next handles Tailwind itself.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Adding a component
 
-## Learn More
+1. Make `src/components/<name>/<Name>.tsx`.
+2. Add `<Name>.stories.tsx` with a story per state and a `play` function for behaviour.
+3. Export it from `src/components/index.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+## What the using app must install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The packages the components import are declared as `peerDependencies` in `package.json`, so the app that uses them installs and owns them:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `react` and `react-dom`
+- `react-day-picker` and `date-fns` for the date picker
+- `radix-ui` for the popover
+- `lucide-react` for icons
+- `class-variance-authority` for button variants
+- `cn` for class merging
 
-## Deploy on Vercel
+They are also dev dependencies here so Storybook and the tests can run.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app also needs Tailwind v4 set to scan these component files, the shadcn theme colours in its global styles, and `tw-animate-css` imported there for the popover animation.
