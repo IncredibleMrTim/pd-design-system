@@ -43,7 +43,7 @@ Before a task that is going to be expensive, say so up front, with what makes it
 
 ## Adapters
 
-- `src/adapters/` holds neutral example adapters only: they show an app how to turn its own job into the data a component shows. Use made-up types and generic wording.
+- `src/adapters/<component>/<name>/` holds neutral example adapters only, grouped by the component they serve (for example `adapters/jobCard/exampleOrder/`). They show an app how to turn its own job into the data that component shows. Use made-up types and generic wording.
 - Never put a real client's adapter, rules, names or types here. This repo is public and every merge publishes to npm. Each app keeps its own adapter next to its own types and helpers.
 - Adapters are not exported from `src/components/index.ts`, so they never ship in the package. Test them with stories.
 
@@ -133,7 +133,8 @@ Storybook is the documentation, so every component needs:
 src/
   app/              # Next host app and globals.css (theme tokens)
   adapters/
-    <name>/         # neutral example adapters, not published
+    <component>/    # adapters for one component
+      <name>/       # a neutral example adapter, not published
   components/
     <name>/         # one folder per component: Component.tsx and its stories
     ui/             # shadcn parts

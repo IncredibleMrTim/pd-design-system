@@ -116,7 +116,7 @@ const job: JobCardData = {
 
 Write one small function in the app that maps its job (and anything derived from it, such as an age or a stage) to `JobCardData`. Keep the app's rules there: the card never imports the app's types, helpers or data hooks.
 
-A worked example of that function is in `src/adapters/exampleOrder/`, with stories under Adapters, then Example order, in Storybook. It uses a made-up order type, and covers an age rule that stops the clock, stage colours, priority pills, formatted dates, a banner that pluralises, and a restricted "summary" view made just by leaving fields out. Copy the pattern, not the file. It isn't part of the published package, and each app keeps its own adapter next to its own types and helpers.
+A worked example of that function is in `src/adapters/jobCard/exampleOrder/`, with stories under Adapters, then Job card, then Example order, in Storybook. It uses a made-up order type, and covers an age rule that stops the clock, stage colours, priority pills, formatted dates, a banner that pluralises, and a restricted "summary" view made just by leaving fields out. Copy the pattern, not the file. It isn't part of the published package, and each app keeps its own adapter next to its own types and helpers.
 
 | Prop | Type | Description |
 | --- | --- | --- |
@@ -158,7 +158,8 @@ The full docs page, with every prop and a story for each part, is in Storybook u
 src/
   app/              Next host app and globals.css (theme tokens)
   adapters/
-    exampleOrder/   a neutral example of turning an app's job into JobCardData (not published)
+    jobCard/        adapters for the JobCard, one folder each (not published)
+      exampleOrder/ a neutral example of turning an app's job into JobCardData
   components/
     <name>/         one folder per component: Component.tsx and its stories
     ui/             shadcn parts: button, calendar, popover
