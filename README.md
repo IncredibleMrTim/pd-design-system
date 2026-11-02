@@ -152,6 +152,15 @@ If two P Rs merge close together and the second carries a number that's already 
 1. Publish the first version by hand (see below), because the trusted publisher can only be added to a package that exists.
 2. On npmjs.com, open the package, then Settings, then Trusted Publisher, and add GitHub Actions with owner `IncredibleMrTim`, repository `pd-design-system` and workflow filename `release.yml`. All three are case-sensitive.
 
+### If a publish fails
+
+The Release workflow only tags a release after the publish succeeds, so a failed publish leaves no tag and nothing on npm. Look at the failed run's "Publish to npm" step:
+
+- **`E403 ... OIDC permission denied for this action`**: npm didn't accept the trusted publisher settings for this workflow. Open the package on npmjs.com, then Settings, then Trusted Publisher, and check the owner (`IncredibleMrTim`), repository (`pd-design-system`) and workflow filename (`release.yml`, with the extension). They're case-sensitive, and if there's an allowed actions option, `npm publish` must be ticked.
+- **`TLOG_CREATE_ENTRY_ERROR ... (409) an equivalent entry already exists`**: the repo is public, so npm records signed provenance for each publish in a public transparency log. Once an attempt has logged an entry, re-running the same run is refused. Don't re-run it. A new commit on `main`, meaning a new merged P R, makes a fresh run and publishes normally. Each failed attempt adds a permanent public log entry, so fix the cause before trying again.
+
+If `package.json` is already ahead of npm when a merge happens, the workflow publishes that version as it is, so a retry after a failure publishes the same number.
+
 ### Publishing by hand
 
 This is only needed for the first release. Commit and merge first, then:
