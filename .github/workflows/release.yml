@@ -48,6 +48,10 @@ jobs:
         if: github.event_name == 'pull_request'
         run: node scripts/version.mjs check
 
+      # Next generates the LayoutProps type the type check needs. It isn't in
+      # Git, so a clean checkout has to generate it first.
+      - run: pnpm exec next typegen
+
       - run: pnpm exec tsc --noEmit
 
       - run: pnpm lint
