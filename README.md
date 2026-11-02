@@ -136,14 +136,30 @@ The app also needs Tailwind v4 and `tw-animate-css` (for the popover animation).
 
 ## Publishing
 
-The package is public on npm under the `processdynamics` organisation. To release:
+The package is public on npm under the `processdynamics` organisation. Every merge to `main` publishes a new version automatically.
 
-1. Bump `version` in `package.json`, merge that to `main`, and switch to `main` with a clean, up-to-date checkout.
+### How it works
+
+- **When you commit**, a pre-commit hook (Husky, installed by `pnpm install`) runs `pnpm version:sync`. It asks npm for the latest version and, if `package.json` isn't already ahead, sets it to that plus one patch and stages the change. It never blocks a commit: if npm is unreachable or the package isn't published yet, it just skips.
+- **On every pull request**, the Release workflow runs `pnpm version:check`, which fails if `package.json` isn't ahead of npm. It's the safety net for a skipped hook, or for another P R that merged first and took your number. If it fails, run `pnpm version:sync`, commit, and push.
+- **On every merge to `main`**, the workflow runs the checks, publishes to npm and tags the release (`v0.1.5`). It uses npm trusted publishing, so no npm token is stored anywhere. It never commits to `main`, because `main` is protected.
+- **For a minor or major release**, set the version yourself in `package.json` (for example `0.2.0`) in the P R. A version already ahead of npm is kept as it is.
+
+If two P Rs merge close together and the second carries a number that's already taken, the workflow publishes npm's latest plus one instead and tags that. `package.json` on `main` is then one behind until the next P R's hook corrects it.
+
+### One-off setup
+
+1. Publish the first version by hand (see below), because the trusted publisher can only be added to a package that exists.
+2. On npmjs.com, open the package, then Settings, then Trusted Publisher, and add GitHub Actions with owner `IncredibleMrTim`, repository `pd-design-system` and workflow filename `release.yml`. All three are case-sensitive.
+
+### Publishing by hand
+
+This is only needed for the first release. Commit and merge first, then:
+
+1. Switch to `main` with a clean, up-to-date checkout.
 2. Log in with `npm login` (two-factor authentication is on).
 3. Run `pnpm release:dry` to rehearse. It runs the type check, lint and story tests, confirms you're logged in to npm, then does a publish dry run that uploads nothing. It works from any branch.
 4. Run `pnpm release`. It first stops unless you're on `main` with a clean working tree that matches `origin/main`. Then it runs the same checks as the rehearsal and `pnpm publish`, which asks for your two-factor code. Publishing builds the package first through `prepublishOnly`, and `publishConfig` already sets public access.
-
-npm refuses a version that has already been published, so bump the version for every release.
 
 To check what would ship without publishing, run `pnpm pack` and read the file list. Only `dist/`, `package.json`, this README and the licence go in.
 

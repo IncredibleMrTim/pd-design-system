@@ -1,0 +1,89 @@
+# On a pull request: run the checks, confirm package.json's version is ahead of
+# npm (the pre-commit hook sets it), and show what would be published.
+# On a push to main (a merge): run the checks, publish to npm using trusted
+# publishing (no stored token), then tag the release. Nothing is committed to
+# main, so the branch protection rule never gets in the way.
+name: Release
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# contents: write lets the job push the release tag.
+# id-token: write lets npm trust this workflow without a token.
+permissions:
+  contents: write
+  id-token: write
+
+# Releases run one at a time. Pull request checks cancel when superseded.
+concurrency:
+  group: ${{ github.event_name == 'push' && 'release' || format('ci-{0}', github.ref) }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Release whatever main is now, which may be newer than the merge
+          # that started this run if two merges landed close together.
+          ref: ${{ github.event_name == 'push' && 'main' || github.sha }}
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - run: npm install --global npm@latest
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check the version is ahead of npm
+        if: github.event_name == 'pull_request'
+        run: node scripts/version.mjs check
+
+      - run: pnpm exec tsc --noEmit
+
+      - run: pnpm lint
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm exec vitest run
+
+      - name: Build the library
+        run: pnpm build:lib
+
+      - name: Show what would be published
+        if: github.event_name == 'pull_request'
+        run: npm pack --dry-run
+
+      - name: Work out the version to publish
+        if: github.event_name == 'push'
+        id: version
+        run: echo "next=$(node scripts/version.mjs next)" >> "$GITHUB_OUTPUT"
+
+      # Normally package.json already holds this version. If a race left it
+      # behind npm, this sets it in the working copy only, to publish the right
+      # number. It is never committed.
+      - name: Set the version for publishing
+        if: github.event_name == 'push'
+        run: npm version "${{ steps.version.outputs.next }}" --no-git-tag-version --allow-same-version
+
+      - name: Publish to npm
+        if: github.event_name == 'push'
+        run: npm publish --access public
+
+      # Tagged after publishing, so a failed publish never leaves a tag behind.
+      - name: Tag the release
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ steps.version.outputs.next }}"
+          git push origin "v${{ steps.version.outputs.next }}"
