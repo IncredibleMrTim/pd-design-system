@@ -14,6 +14,13 @@ export default function Home() {
         shadcn.
       </p>
 
+      <a
+        href="/storybook/index.html"
+        className="mt-6 inline-flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+      >
+        Browse the components in Storybook
+      </a>
+
       <h2 className="mt-12 text-sm font-medium uppercase tracking-wide text-muted-foreground">
         Components
       </h2>
