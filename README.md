@@ -57,7 +57,7 @@ The story tests don't check styling. For visual changes, open the story in a bro
 
 ### DatePicker
 
-A single date picker. A button shows the chosen date, or "Pick a date", and opens a calendar in a popover.
+A single date picker. A text field takes a typed date, and a calendar button beside it opens a calendar in a popover. Both change the same date.
 
 ```tsx
 "use client";
@@ -73,15 +73,18 @@ export function Example() {
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `date` | `Date \| null` | The selected date. Optional. The component is controlled, so update it from `onSelect` or the button won't change. |
-| `onSelect` | `(date: Date) => void` | Required. Called with the chosen day, and the popover closes straight after. |
+| `date` | `Date \| null` | The selected date. Optional. The component is controlled, so update it from `onSelect` or the date won't change. |
+| `onSelect` | `(date: Date) => void` | Required. Called with the chosen day, from the calendar or from a typed date. |
+| `dateFormat` | `string` | A date-fns format string for showing and typing the date. Optional, defaults to `dd/MM/yyyy`. The placeholder is this in lower case. |
 
 Behaviour to know about:
 
-- The button and popover fill the width of their container, so size it with a wrapper.
-- The date shows in long format, for example "March 15th, 2026".
-- The calendar opens on the month of `date`, or the current month when there is none. With no date, today is highlighted as the selection while the button still says "Pick a date".
-- A date can be changed but not cleared.
+- The field and the calendar button fill the width of their container, so size it with a wrapper.
+- A typed date is read when the user presses Enter or leaves the field. Text that is not a real date, or a year under 1000 such as `2/11/26`, is ignored and the field goes back to the last good date. Enter doesn't submit a surrounding form.
+- Picking a day in the calendar fills the field and closes the popover.
+- The calendar opens on the month of `date`, or the current month when there is none. With no date, today is highlighted as the selection while the field stays empty.
+- A date can be changed but not cleared. Emptying the field puts the last date back.
+- The field's accessible name is "Date" and the button's is "Open calendar". With two pickers on one page, wrap each in a labelled group.
 - The popover is modal on purpose, so it works inside a vaul drawer.
 
 The full docs page, with live controls and stories, is in Storybook under Components, then DatePicker.
