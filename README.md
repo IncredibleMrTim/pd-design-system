@@ -2,6 +2,28 @@
 
 A component library for Process Dynamics, built with Next.js, Tailwind CSS v4 and Storybook. Components are built on [shadcn](https://ui.shadcn.com) (Radix base). Storybook is both the documentation and the test suite.
 
+## Install
+
+The library is published on npm as `@pd-ds/components`.
+
+```bash
+pnpm add @pd-ds/components
+```
+
+Install the peer dependencies too (see [What the using app must install](#what-the-using-app-must-install)), then add two lines to your global CSS, after Tailwind:
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@pd-ds/components/styles.css";
+```
+
+`styles.css` carries the shadcn theme colours, the dark mode variant, and the Tailwind source line that makes Tailwind scan the package's classes. Then import components by name:
+
+```tsx
+import { DatePicker } from "@pd-ds/components";
+```
+
 ## Stack
 
 - Next.js 16 (App Router) and React 19. The Next app is only a host for the components.
@@ -26,6 +48,7 @@ pnpm storybook                          # http://localhost:6006
 - `pnpm exec tsc --noEmit` runs the type check.
 - `pnpm lint` runs ESLint.
 - `pnpm dev` runs the Next host app.
+- `pnpm build:lib` builds the package into `dist/` (ESM, CommonJS, types and `styles.css`).
 
 The story tests don't check styling. For visual changes, open the story in a browser as well.
 
@@ -39,7 +62,7 @@ A single date picker. A button shows the chosen date, or "Pick a date", and open
 "use client";
 
 import { useState } from "react";
-import { DatePicker } from "@/components";
+import { DatePicker } from "@pd-ds/components";
 
 export function Example() {
   const [date, setDate] = useState<Date | null>(null);
@@ -74,6 +97,10 @@ src/
     index.ts        public exports
   lib/
     utils.ts        re-exports cn
+  styles/
+    theme.css       theme tokens and variants, shipped as styles.css
+scripts/            buildStyles.mjs writes dist/styles.css
+tsup.config.ts      library build config
 components.json     shadcn config
 ```
 
@@ -104,8 +131,17 @@ The packages the components import are declared as `peerDependencies` in `packag
 
 They are also dev dependencies here so Storybook and the tests can run.
 
-The app also needs Tailwind v4 set to scan these component files, the shadcn theme colours in its global styles, and `tw-animate-css` imported there for the popover animation.
+The app also needs Tailwind v4 and `tw-animate-css` (for the popover animation). The theme colours and the Tailwind source line come from `@pd-ds/components/styles.css`, as shown in [Install](#install).
 
-## Status
+## Publishing
 
-The project is not yet published as a package. There is no build step or export map, so apps can't install it yet.
+The package is public on npm under the `pd-ds` organisation. To release:
+
+1. Bump `version` in `package.json`.
+2. Run the type check, lint and story tests.
+3. Log in with `npm login` (two-factor authentication is on).
+4. Run `pnpm publish`. It builds first through `prepublishOnly`, and `publishConfig` already sets public access.
+
+To check what would ship without publishing, run `pnpm pack` and read the file list. Only `dist/`, `package.json` and this README go in.
+
+Because of how it's built, every component is bundled into one client bundle with a `"use client"` banner, and the `@/` alias used inside the source is resolved at build time.
