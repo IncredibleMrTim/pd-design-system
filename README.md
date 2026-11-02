@@ -22,6 +22,7 @@ pnpm storybook                          # http://localhost:6006
 
 - `pnpm storybook` runs Storybook on port 6006.
 - `pnpm build-storybook` builds the static Storybook.
+- `pnpm build` builds Storybook into `public/storybook` first and then the Next app, so the deployed site serves Storybook at `/storybook/index.html`. Don't commit `public/storybook`, it is generated.
 - `pnpm exec vitest run` runs every story as a test, including the `play` interaction checks.
 - `pnpm exec tsc --noEmit` runs the type check.
 - `pnpm lint` runs ESLint.
