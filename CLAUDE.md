@@ -41,6 +41,12 @@ Before a task that is going to be expensive, say so up front, with what makes it
 - Functional components with hooks. Keep files under 300 lines and functions under 50. Extract helpers, hooks and large sections of markup when they grow.
 - Class merging uses `cn` from the shadcn `cn` package, re-exported by `src/lib/utils.ts`.
 
+## Adapters
+
+- `src/adapters/` holds neutral example adapters only: they show an app how to turn its own job into the data a component shows. Use made-up types and generic wording.
+- Never put a real client's adapter, rules, names or types here. This repo is public and every merge publishes to npm. Each app keeps its own adapter next to its own types and helpers.
+- Adapters are not exported from `src/components/index.ts`, so they never ship in the package. Test them with stories.
+
 ## Documentation and stories
 
 Storybook is the documentation, so every component needs:
@@ -126,6 +132,8 @@ Storybook is the documentation, so every component needs:
 .storybook/         # Storybook config (main.ts registers the Tailwind plugin)
 src/
   app/              # Next host app and globals.css (theme tokens)
+  adapters/
+    <name>/         # neutral example adapters, not published
   components/
     <name>/         # one folder per component: Component.tsx and its stories
     ui/             # shadcn parts
