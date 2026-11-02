@@ -34,11 +34,12 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm build:storybook-site && next build",
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "build:storybook-site": "rm -rf public/storybook && storybook build -o storybook-static && mv storybook-static public/storybook",
     "build:lib": "tsup && node scripts/buildStyles.mjs",
     "prepublishOnly": "pnpm build:lib"
   },
