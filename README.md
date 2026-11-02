@@ -86,6 +86,69 @@ Behaviour to know about:
 
 The full docs page, with live controls and stories, is in Storybook under Components, then DatePicker.
 
+### JobCard
+
+A card for one job: a title, and optionally a stage, subtitle, detail lines, description, callouts, badge, pills and a banner. It only displays what it is given, so it has no idea what a job is in any particular app. The using app turns its own job into a `JobCardData` and decides every word, colour and date format, which is what lets one card serve different projects.
+
+```tsx
+import { Flag } from "lucide-react";
+import { JobCard, type JobCardData } from "@processdynamics/components";
+
+const job: JobCardData = {
+  title: "PO-1001",
+  subtitle: "Acme Co",
+  tone: "warning",
+  stage: { label: "In progress", color: "#d97706" },
+  details: ["Created: 29 Oct 2026"],
+  badge: { label: "Gold", color: "yellow" },
+  pills: [
+    { label: "Flagged", tone: "warning", icon: <Flag />, priority: true },
+    { label: "Internal", tone: "blue" },
+  ],
+};
+
+<JobCard
+  job={job}
+  onClick={() => openJob()}
+  action={{ label: "Send back", onClick: sendBack }}
+/>;
+```
+
+Write one small function in the app that maps its job (and anything derived from it, such as an age or a stage) to `JobCardData`. Keep the app's rules there: the card never imports the app's types, helpers or data hooks.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `job` | `JobCardData` | Required. What to show, already decided. |
+| `onClick` | `() => void` | Called when the card is clicked. Without it the card isn't clickable. |
+| `action` | `{ label, onClick, disabled? }` | A full width button at the bottom. Clicking it doesn't also call `onClick`. |
+| `leadingContent` | `ReactNode` | Content before the title, for example a checkbox. |
+| `expandedContent` | `ReactNode` | Extra content at the very bottom. |
+| `className` | `string` | Extra classes for the card. |
+
+The fields of `JobCardData`, all optional except `title`:
+
+| Field | Description |
+| --- | --- |
+| `title` | The heading, for example a PO number. |
+| `subtitle` | A line under the heading. |
+| `stage` | `{ label, color? }`: shown top right beside a dot in any CSS colour. |
+| `tone` | The card colour: `success` (green), `warning` (orange), `danger` (red) or `neutral` (grey, the default). |
+| `details` | Short grey lines, one per entry. |
+| `description` | Shown in italics. |
+| `callouts` | Bordered boxes of text, one per entry. |
+| `badge` | `{ label, color }`: a colour block beside the pills. |
+| `pills` | `{ label, tone, icon?, priority? }[]`. Labels must be unique. |
+| `banner` | `{ label, icon? }`: a bar across the bottom, in a colour no pill uses. |
+
+Behaviour to know about:
+
+- Leave a field out and its part of the card disappears.
+- Pills marked `priority` lead, and a rule splits them from the others. With only priority pills there is no rule.
+- Pill tones are `critical`, `warning`, `danger`, the soft tints `red`, `orange`, `green`, `blue` and `purple`, and the outlines `outline` and `dashed`. An icon can be any small svg, such as a lucide icon.
+- The colour comes from `tone` only. The card colours and pill tints are fixed palette colours, because the shadcn theme has no success or warning colours to map them to.
+
+The full docs page, with every prop and a story for each part, is in Storybook under Components, then JobCard.
+
 ## Project layout
 
 ```
