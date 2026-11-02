@@ -138,11 +138,13 @@ The app also needs Tailwind v4 and `tw-animate-css` (for the popover animation).
 
 The package is public on npm under the `processdynamics` organisation. To release:
 
-1. Bump `version` in `package.json`.
-2. Run the type check, lint and story tests.
-3. Log in with `npm login` (two-factor authentication is on).
-4. Run `pnpm publish`. It builds first through `prepublishOnly`, and `publishConfig` already sets public access.
+1. Bump `version` in `package.json`, merge that to `main`, and switch to `main` with a clean, up-to-date checkout.
+2. Log in with `npm login` (two-factor authentication is on).
+3. Run `pnpm release:dry` to rehearse. It runs the type check, lint and story tests, confirms you're logged in to npm, then does a publish dry run that uploads nothing.
+4. Run `pnpm release`. It does the same checks, then runs `pnpm publish` and asks for your two-factor code. Publishing builds the package first through `prepublishOnly`, and `publishConfig` already sets public access.
 
-To check what would ship without publishing, run `pnpm pack` and read the file list. Only `dist/`, `package.json` and this README go in.
+`pnpm publish` refuses to run unless you're on `main`, the working tree is clean and `main` is up to date, and npm refuses a version that has already been published, so bump the version for every release.
+
+To check what would ship without publishing, run `pnpm pack` and read the file list. Only `dist/`, `package.json`, this README and the licence go in.
 
 Because of how it's built, every component is bundled into one client bundle with a `"use client"` banner, and the `@/` alias used inside the source is resolved at build time.
