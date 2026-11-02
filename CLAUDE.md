@@ -62,7 +62,7 @@ Storybook is the documentation, so every component needs:
 
 - Write comments for why, not what. Explain non-obvious decisions, like why a popover is modal.
 - No commented-out code in commits. Use git history.
-- TODO comments carry a ticket number when there is one: `// TODO(123): Fix this`.
+- TODO comments carry a ticket number: `// TODO(PBDS-123): Fix this`.
 
 ## Tailwind and styling
 
@@ -87,6 +87,13 @@ Storybook is the documentation, so every component needs:
 - Handle errors explicitly. No silent failures.
 - Never put secrets in the repo. Use `.env.local` and keep it out of commits.
 
+## Tickets
+
+- Every ticket prefix in this project is `PBDS`, for example `PBDS-12`.
+- Work is tracked on the Trello board "PD Design System". Create the card first, before branching. Search the whole board for an existing card before making a new one.
+- Name the card with its ticket number, `PBDS-12 short title`, using the next unused number on the board.
+- Use the same ticket number in the branch name, the commit body and the P R title. Put the card link at the very top of the P R description.
+
 ## Git Workflow
 
 ### Commits
@@ -95,11 +102,11 @@ Storybook is the documentation, so every component needs:
 - Types: `feature`, `fix`, `chore`, `docs`, `style`, `refactor`, `test`.
 - Atomic and focused. Messages in lower case, except the scope.
 - Keep every body line under 100 characters, so write one short line per sentence.
-- Reference ticket numbers in the commit body if there is one.
+- Put the ticket number in the commit body, for example `PBDS-123`.
 
 ### Branches
 
-- Format: `type/description`, with the ticket number when there is one (`feature/123-date-picker`).
+- Format: `type/PBDS-###-description`, for example `feature/PBDS-12-date-picker`.
 - Types match commit types. Branch from `main` and delete branches after merging.
 - Stage files by name, never `git add -A` or `git add .`, and read the staged diff before committing.
 
