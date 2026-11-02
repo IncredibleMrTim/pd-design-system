@@ -1,6 +1,6 @@
 /*
  * Theme tokens and variants the components need. Shipped to apps as
- * @pd-ds/components/styles.css. The two data-* variants are copied from
+ * @processdynamics/components/styles.css. The two data-* variants are copied from
  * shadcn/tailwind.css so using apps don't have to install the shadcn package.
  * A future shadcn component may need more of its variants copied here.
  */

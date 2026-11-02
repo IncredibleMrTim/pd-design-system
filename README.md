@@ -4,10 +4,10 @@ A component library for Process Dynamics, built with Next.js, Tailwind CSS v4 an
 
 ## Install
 
-The library is published on npm as `@pd-ds/components`.
+The library is published on npm as `@processdynamics/components`.
 
 ```bash
-pnpm add @pd-ds/components
+pnpm add @processdynamics/components
 ```
 
 Install the peer dependencies too (see [What the using app must install](#what-the-using-app-must-install)), then add two lines to your global CSS, after Tailwind:
@@ -15,13 +15,13 @@ Install the peer dependencies too (see [What the using app must install](#what-t
 ```css
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "@pd-ds/components/styles.css";
+@import "@processdynamics/components/styles.css";
 ```
 
 `styles.css` carries the shadcn theme colours, the dark mode variant, and the Tailwind source line that makes Tailwind scan the package's classes. Then import components by name:
 
 ```tsx
-import { DatePicker } from "@pd-ds/components";
+import { DatePicker } from "@processdynamics/components";
 ```
 
 ## Stack
@@ -62,7 +62,7 @@ A single date picker. A button shows the chosen date, or "Pick a date", and open
 "use client";
 
 import { useState } from "react";
-import { DatePicker } from "@pd-ds/components";
+import { DatePicker } from "@processdynamics/components";
 
 export function Example() {
   const [date, setDate] = useState<Date | null>(null);
@@ -131,11 +131,11 @@ The packages the components import are declared as `peerDependencies` in `packag
 
 They are also dev dependencies here so Storybook and the tests can run.
 
-The app also needs Tailwind v4 and `tw-animate-css` (for the popover animation). The theme colours and the Tailwind source line come from `@pd-ds/components/styles.css`, as shown in [Install](#install).
+The app also needs Tailwind v4 and `tw-animate-css` (for the popover animation). The theme colours and the Tailwind source line come from `@processdynamics/components/styles.css`, as shown in [Install](#install).
 
 ## Publishing
 
-The package is public on npm under the `pd-ds` organisation. To release:
+The package is public on npm under the `processdynamics` organisation. To release:
 
 1. Bump `version` in `package.json`.
 2. Run the type check, lint and story tests.
