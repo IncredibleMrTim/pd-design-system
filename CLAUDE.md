@@ -13,8 +13,13 @@ Next.js writes its own guidance in `AGENTS.md`. Read it before making Next-speci
 - `pnpm exec vitest run` runs every story as a test in a real browser.
 - `pnpm exec tsc --noEmit` and `pnpm lint` are the type check and lint.
 - `pnpm build-storybook` builds the static Storybook.
+- `pnpm build:lib` builds the npm package into `dist/`. `dist/` is listed in `.gitignore`.
 
-The package manager is pnpm, pinned in `package.json`. Never use npm or create a `package-lock.json`.
+The package manager is pnpm, pinned in `package.json`. Never use npm or create a `package-lock.json`. The one exception is `npm login`, which is how Tim signs in to the registry before `pnpm publish`.
+
+## Publishing
+
+The library is published as `@processdynamics/components` (public, under the `processdynamics` npm organisation). Publishing needs Tim's npm login and two-factor code, so he runs `pnpm publish` himself. Before a release, run `pnpm pack` and check that only `dist/`, `package.json` and the README ship. A component imported from a new package also needs that package in `peerDependencies`, and the tsup build leaves peer dependencies external.
 
 ## Before calling work done
 
@@ -62,7 +67,7 @@ Storybook is the documentation, so every component needs:
 
 - Write comments for why, not what. Explain non-obvious decisions, like why a popover is modal.
 - No commented-out code in commits. Use git history.
-- TODO comments carry a ticket number: `// TODO(PBDS-123): Fix this`.
+- TODO comments carry a ticket number: `// TODO(PDDS-123): Fix this`.
 
 ## Tailwind and styling
 
@@ -89,9 +94,9 @@ Storybook is the documentation, so every component needs:
 
 ## Tickets
 
-- Every ticket prefix in this project is `PBDS`, for example `PBDS-12`.
+- Every ticket prefix in this project is `PDDS`, for example `PDDS-12`.
 - Work is tracked on the Trello board "PD Design System". Create the card first, before branching. Search the whole board for an existing card before making a new one.
-- Name the card with its ticket number, `PBDS-12 short title`, using the next unused number on the board.
+- Name the card with its ticket number, `PDDS-12 short title`, using the next unused number on the board.
 - Use the same ticket number in the branch name, the commit body and the P R title. Put the card link at the very top of the P R description.
 
 ## Git Workflow
@@ -102,11 +107,11 @@ Storybook is the documentation, so every component needs:
 - Types: `feature`, `fix`, `chore`, `docs`, `style`, `refactor`, `test`.
 - Atomic and focused. Messages in lower case, except the scope.
 - Keep every body line under 100 characters, so write one short line per sentence.
-- Put the ticket number in the commit body, for example `PBDS-123`.
+- Put the ticket number in the commit body, for example `PDDS-123`.
 
 ### Branches
 
-- Format: `type/PBDS-###-description`, for example `feature/PBDS-12-date-picker`.
+- Format: `type/PDDS-###-description`, for example `feature/PDDS-12-date-picker`.
 - Types match commit types. Branch from `main` and delete branches after merging.
 - Stage files by name, never `git add -A` or `git add .`, and read the staged diff before committing.
 
