@@ -19,7 +19,7 @@ The package manager is pnpm, pinned in `package.json`. Never use npm or create a
 
 ## Publishing
 
-The library is published as `@processdynamics/components` (public, under the `processdynamics` npm organisation). Publishing needs Tim's npm login and two-factor code, so he runs `pnpm release` himself. `pnpm release:dry` is the safe rehearsal: the same checks, ending in a publish dry run. Before a release, run `pnpm pack` and check that only `dist/`, `package.json`, the README and the licence ship. A component imported from a new package also needs that package in `peerDependencies`, and the tsup build leaves peer dependencies external.
+The library is published as `@processdynamics/components` (public, under the `processdynamics` npm organisation). Publishing needs Tim's npm login and two-factor code, so he runs `pnpm release` himself. `pnpm release:dry` is the safe rehearsal: the same checks, ending in a publish dry run. `pnpm release` first refuses to run unless on a clean `main` that matches `origin/main`. Before a release, run `pnpm pack` and check that only `dist/`, `package.json`, the README and the licence ship. A component imported from a new package also needs that package in `peerDependencies`, and the tsup build leaves peer dependencies external.
 
 ## Before calling work done
 

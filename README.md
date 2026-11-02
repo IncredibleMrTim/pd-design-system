@@ -140,10 +140,10 @@ The package is public on npm under the `processdynamics` organisation. To releas
 
 1. Bump `version` in `package.json`, merge that to `main`, and switch to `main` with a clean, up-to-date checkout.
 2. Log in with `npm login` (two-factor authentication is on).
-3. Run `pnpm release:dry` to rehearse. It runs the type check, lint and story tests, confirms you're logged in to npm, then does a publish dry run that uploads nothing.
-4. Run `pnpm release`. It does the same checks, then runs `pnpm publish` and asks for your two-factor code. Publishing builds the package first through `prepublishOnly`, and `publishConfig` already sets public access.
+3. Run `pnpm release:dry` to rehearse. It runs the type check, lint and story tests, confirms you're logged in to npm, then does a publish dry run that uploads nothing. It works from any branch.
+4. Run `pnpm release`. It first stops unless you're on `main` with a clean working tree that matches `origin/main`. Then it runs the same checks as the rehearsal and `pnpm publish`, which asks for your two-factor code. Publishing builds the package first through `prepublishOnly`, and `publishConfig` already sets public access.
 
-`pnpm publish` refuses to run unless you're on `main`, the working tree is clean and `main` is up to date, and npm refuses a version that has already been published, so bump the version for every release.
+npm refuses a version that has already been published, so bump the version for every release.
 
 To check what would ship without publishing, run `pnpm pack` and read the file list. Only `dist/`, `package.json`, this README and the licence go in.
 
