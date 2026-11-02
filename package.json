@@ -1,6 +1,6 @@
 {
   "name": "@processdynamics/components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Process Dynamics React component library, built on shadcn (Radix) and Tailwind CSS v4.",
   "license": "MIT",
   "repository": {
@@ -41,11 +41,14 @@
     "build-storybook": "storybook build",
     "build:storybook-site": "rm -rf public/storybook && storybook build -o storybook-static && mv storybook-static public/storybook",
     "build:lib": "tsup && node scripts/buildStyles.mjs",
+    "version:sync": "node scripts/version.mjs sync",
+    "version:check": "node scripts/version.mjs check",
     "release:guard": "node scripts/checkReleaseBranch.mjs",
     "release:check": "pnpm exec tsc --noEmit && pnpm lint && pnpm exec vitest run && npm whoami",
     "release:dry": "pnpm release:check && pnpm publish --dry-run",
     "release": "pnpm release:guard && pnpm release:check && pnpm publish",
-    "prepublishOnly": "pnpm build:lib"
+    "prepublishOnly": "pnpm build:lib",
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "latest",
@@ -67,6 +70,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "eslint-plugin-storybook": "^10.6.5",
+    "husky": "^9.1.7",
     "lucide-react": "^1.66.0",
     "next": "16.4.3",
     "playwright": "latest",
