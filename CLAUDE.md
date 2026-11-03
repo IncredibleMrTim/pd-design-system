@@ -83,7 +83,7 @@ Storybook is the documentation, so every component needs:
 
 ## Dependencies
 
-- Libraries the components import are listed in `peerDependencies`, and also as dev dependencies so Storybook and the tests run. The app that uses the components installs them. Today these are `react`, `react-dom`, `react-day-picker`, `date-fns`, `radix-ui`, `lucide-react`, `class-variance-authority` and `cn`.
+- Libraries the components import are listed in `peerDependencies`, and also as dev dependencies so Storybook and the tests run. The app that uses the components installs them. Today these are `react`, `react-dom`, `react-day-picker`, `date-fns`, `radix-ui`, `lucide-react`, `class-variance-authority`, `cn` and `sonner`.
 - When a component imports a new package, add it to both lists and to the README section on what the using app must install.
 - The using app also needs Tailwind v4 scanning these files, the shadcn theme colours, and `tw-animate-css`.
 - Before replacing or removing an unfamiliar package, look it up on npm first.

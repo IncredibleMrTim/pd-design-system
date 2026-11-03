@@ -1,6 +1,6 @@
 {
   "name": "@processdynamics/components",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Process Dynamics React component library, built on shadcn (Radix) and Tailwind CSS v4.",
   "license": "MIT",
   "repository": {
@@ -84,6 +84,7 @@
     "react-day-picker": "^10.0.2",
     "react-dom": "19.3.0",
     "shadcn": "^4.23.0",
+    "sonner": "^2.0.8",
     "storybook": "^10.6.5",
     "tailwindcss": "^4",
     "tsup": "^9.0.0",
@@ -101,6 +102,7 @@
     "radix-ui": "^1.8.1",
     "react": "^19.0.0",
     "react-day-picker": "^10.0.2",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sonner": "^2.0.8"
   }
 }
