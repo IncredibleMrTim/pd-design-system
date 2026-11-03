@@ -97,6 +97,7 @@ Storybook is the documentation, so every component needs:
 
 - Handle errors explicitly. No silent failures.
 - Never put secrets in the repo. Use `.env.local` and keep it out of commits.
+- This repo is public and every merge publishes to npm, so never add secure or named information to it, at any point and anywhere: files, stories, tests, examples, commits, branch names, P R text or comments. That means client or company names, people's names, and security codes such as keys, tokens, passwords and connection strings, or anything like them. Use neutral made-up examples.
 
 ## Tickets
 
