@@ -1,6 +1,6 @@
 {
   "name": "@processdynamics/components",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Process Dynamics React component library, built on shadcn (Radix) and Tailwind CSS v4.",
   "license": "MIT",
   "repository": {
