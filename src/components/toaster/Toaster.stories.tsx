@@ -1,8 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite"
+import { useId } from "react"
 import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test"
 import { Button } from "@/components/ui/button"
 import { HeartIcon, StarIcon } from "lucide-react"
-import { Toaster, toast, toastColors, type ToasterProps } from "./Toaster"
+import {
+  Toaster,
+  toast,
+  toastColors,
+  type ToastColors,
+  type ToasterProps,
+} from "./Toaster"
 
 const meta = {
   title: "Components/Toaster",
@@ -31,26 +38,28 @@ const meta = {
   beforeEach: () => () => {
     toast.dismiss()
   },
-  parameters: {
-    // Each story mounts its own Toaster. Inline on the docs page they would all
-    // show every toast, so the docs page renders each one in its own frame.
-    docs: { story: { inline: false, iframeHeight: 220 } },
-  },
 } satisfies Meta<typeof Toaster>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** Renders the Toaster and one button that shows a toast when pressed. */
+/**
+ * Renders the Toaster and one button that shows a toast when pressed.
+ *
+ * Every demo has its own toaster id, and `show` is given it to pass to `toast`.
+ * Without it, the docs page, which shows all the stories at once, would show
+ * each toast in every story's Toaster.
+ */
 function ToastDemo({
   label,
   show,
   ...toasterProps
-}: ToasterProps & { label: string; show: () => void }) {
+}: ToasterProps & { label: string; show: (toasterId: string) => void }) {
+  const toasterId = useId()
   return (
     <>
-      <Toaster {...toasterProps} />
-      <Button type="button" variant="outline" onClick={show}>
+      <Toaster {...toasterProps} id={toasterId} />
+      <Button type="button" variant="outline" onClick={() => show(toasterId)}>
         {label}
       </Button>
     </>
@@ -60,7 +69,7 @@ function ToastDemo({
 /** A plain message, at the top centre by default. */
 export const Default: Story = {
   render: (args) => (
-    <ToastDemo {...args} label="Show toast" show={() => toast("Job saved")} />
+    <ToastDemo {...args} label="Show toast" show={(toasterId) => toast("Job saved", { toasterId })} />
   ),
   play: async ({ canvasElement }) => {
     await userEvent.click(
@@ -86,7 +95,7 @@ export const Success: Story = {
     <ToastDemo
       {...args}
       label="Show success"
-      show={() => toast.success("Job saved")}
+      show={(toasterId) => toast.success("Job saved", { toasterId })}
     />
   ),
   play: async ({ canvasElement }) => {
@@ -106,7 +115,9 @@ export const ErrorMessage: Story = {
     <ToastDemo
       {...args}
       label="Show error"
-      show={() => toast.error("Could not save the job")}
+      show={(toasterId) =>
+        toast.error("Could not save the job", { toasterId })
+      }
     />
   ),
   play: async ({ canvasElement }) => {
@@ -130,8 +141,11 @@ export const WithAction: Story = {
     <ToastDemo
       {...args}
       label="Show with action"
-      show={() =>
-        toast("Job deleted", { action: { label: "Undo", onClick: onUndo } })
+      show={(toasterId) =>
+        toast("Job deleted", {
+          toasterId,
+          action: { label: "Undo", onClick: onUndo },
+        })
       }
     />
   ),
@@ -157,7 +171,7 @@ export const WithAction: Story = {
 export const BottomRight: Story = {
   args: { position: "bottom-right" },
   render: (args) => (
-    <ToastDemo {...args} label="Show toast" show={() => toast("Job saved")} />
+    <ToastDemo {...args} label="Show toast" show={(toasterId) => toast("Job saved", { toasterId })} />
   ),
   play: async ({ canvasElement }) => {
     await userEvent.click(
@@ -176,8 +190,9 @@ export const CustomIcon: Story = {
     <ToastDemo
       {...args}
       label="Show with icon"
-      show={() =>
+      show={(toasterId) =>
         toast("Job starred", {
+          toasterId,
           icon: <StarIcon data-testid="custom-icon" className="size-4" />,
         })
       }
@@ -199,23 +214,37 @@ export const CustomIcon: Story = {
   },
 }
 
-/** One toast with its own colors. Each of the three is optional. */
-export const CustomColor: Story = {
-  render: (args) => (
+/**
+ * One toast with its own colors. Each of the three is optional. Change them in
+ * the controls panel and press the button again to see the result.
+ */
+export const CustomColor: StoryObj<ToasterProps & ToastColors> = {
+  args: {
+    background: "#1f2937",
+    text: "#f9fafb",
+    border: "#4b5563",
+  },
+  argTypes: {
+    background: { control: "color", description: "Background of the toast." },
+    text: {
+      control: "color",
+      description: "Color of the message and the icon.",
+    },
+    border: { control: "color", description: "Color of the toast's border." },
+  },
+  render: ({ background, text, border, ...toasterArgs }) => (
     <ToastDemo
-      {...args}
+      {...toasterArgs}
       label="Show with color"
-      show={() =>
+      show={(toasterId) =>
         toast("Job approved", {
-          style: toastColors({
-            background: "var(--primary)",
-            text: "var(--primary-foreground)",
-          }),
+          toasterId,
+          style: toastColors({ background, text, border }),
         })
       }
     />
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, args }) => {
     await userEvent.click(
       within(canvasElement).getByRole("button", { name: "Show with color" }),
     )
@@ -224,11 +253,15 @@ export const CustomColor: Story = {
     )
     await expect(toastElement).toHaveAttribute(
       "style",
-      expect.stringContaining("--normal-bg: var(--primary)"),
+      expect.stringContaining(`--normal-bg: ${args.background}`),
     )
     await expect(toastElement).toHaveAttribute(
       "style",
-      expect.stringContaining("--normal-text: var(--primary-foreground)"),
+      expect.stringContaining(`--normal-text: ${args.text}`),
+    )
+    await expect(toastElement).toHaveAttribute(
+      "style",
+      expect.stringContaining(`--normal-border: ${args.border}`),
     )
   },
   parameters: {
@@ -236,8 +269,9 @@ export const CustomColor: Story = {
       source: {
         code: `toast("Job approved", {
   style: toastColors({
-    background: "var(--primary)",
-    text: "var(--primary-foreground)",
+    background: "#1f2937",
+    text: "#f9fafb",
+    border: "#4b5563",
   }),
 })`,
       },
@@ -254,9 +288,9 @@ export const ChangedDefaultIcon: Story = {
     <ToastDemo
       {...args}
       label="Show success and error"
-      show={() => {
-        toast.success("Job saved")
-        toast.error("Could not save the job")
+      show={(toasterId) => {
+        toast.success("Job saved", { toasterId })
+        toast.error("Could not save the job", { toasterId })
       }}
     />
   ),
