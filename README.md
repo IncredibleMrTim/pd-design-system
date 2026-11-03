@@ -200,6 +200,7 @@ The packages the components import are declared as `peerDependencies` in `packag
 - `lucide-react` for icons
 - `class-variance-authority` for button variants
 - `cn` for class merging
+- `sonner` for the toaster
 
 They are also dev dependencies here so Storybook and the tests can run.
 

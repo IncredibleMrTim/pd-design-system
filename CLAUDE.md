@@ -83,7 +83,7 @@ Storybook is the documentation, so every component needs:
 
 ## Dependencies
 
-- Libraries the components import are listed in `peerDependencies`, and also as dev dependencies so Storybook and the tests run. The app that uses the components installs them. Today these are `react`, `react-dom`, `react-day-picker`, `date-fns`, `radix-ui`, `lucide-react`, `class-variance-authority` and `cn`.
+- Libraries the components import are listed in `peerDependencies`, and also as dev dependencies so Storybook and the tests run. The app that uses the components installs them. Today these are `react`, `react-dom`, `react-day-picker`, `date-fns`, `radix-ui`, `lucide-react`, `class-variance-authority`, `cn` and `sonner`.
 - When a component imports a new package, add it to both lists and to the README section on what the using app must install.
 - The using app also needs Tailwind v4 scanning these files, the shadcn theme colours, and `tw-animate-css`.
 - Before replacing or removing an unfamiliar package, look it up on npm first.
@@ -97,6 +97,7 @@ Storybook is the documentation, so every component needs:
 
 - Handle errors explicitly. No silent failures.
 - Never put secrets in the repo. Use `.env.local` and keep it out of commits.
+- This repo is public and every merge publishes to npm, so never add secure or named information to it, at any point and anywhere: files, stories, tests, examples, commits, branch names, P R text or comments. That means client or company names, people's names, and security codes such as keys, tokens, passwords and connection strings, or anything like them. Use neutral made-up examples.
 
 ## Tickets
 
