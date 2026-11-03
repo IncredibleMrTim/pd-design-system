@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { DebouncedInput } from "@/components/DebouncedInput";
+import { DebouncedInput } from "@/components/debounceInput/DebouncedInput";
 
 beforeEach(() => {
   // Testing Library waits on a zero-length timer after every action; the clock
@@ -35,7 +35,7 @@ describe("DebouncedInput", () => {
     expect(onValueChange).toHaveBeenCalledWith("abc");
   });
 
-  it("pushes the waiting text through on blur-sm", async () => {
+  it("pushes the waiting text through on blur", async () => {
     const user = setupUser();
     const onValueChange = vi.fn();
     render(<DebouncedInput value="" onValueChange={onValueChange} />);
