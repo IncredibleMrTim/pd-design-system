@@ -7,7 +7,7 @@ import {
   type FocusEventHandler,
 } from "react"
 import { Input } from "@/components/ui/input"
-import { debounce, type IDebouncedFunction } from "@/lib/debounce"
+import { debounce, type IDebouncedFunction } from "./debounce"
 
 export interface DebouncedInputProps extends Omit<
   ComponentProps<typeof Input>,
