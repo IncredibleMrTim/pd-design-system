@@ -201,6 +201,7 @@ The packages the components import are declared as `peerDependencies` in `packag
 - `class-variance-authority` for button variants
 - `cn` for class merging
 - `sonner` for the toaster
+- `next` for the footer navigation's links and current path
 
 They are also dev dependencies here so Storybook and the tests can run.
 

@@ -22,3 +22,8 @@ export type {
   PullPhase,
   RefreshOutcome,
 } from "./pullToRefreshArea/PullToRefreshArea";
+export { FooterNavigation } from "./footerNavigation/FooterNavigation";
+export type {
+  FooterNavigationProps,
+  FooterNavigationItem,
+} from "./footerNavigation/FooterNavigation";
