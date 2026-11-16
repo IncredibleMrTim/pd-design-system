@@ -22,6 +22,13 @@ export type {
   PullPhase,
   RefreshOutcome,
 } from "./pullToRefreshArea/PullToRefreshArea";
+export { DocumentScanner } from "./documentScanner/DocumentScanner";
+export type {
+  DocumentScannerProps,
+  DocumentScannerPage,
+  DocumentScannerLabels,
+  DocumentScannerStatus,
+} from "./documentScanner/DocumentScanner";
 export { FooterNavigation } from "./footerNavigation/FooterNavigation";
 export type {
   FooterNavigationProps,
